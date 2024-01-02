@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blue Team Labs Online Writeups on Blog</title>
+    <link>https://1d8.github.io/writeups/blueteamlabsonline/</link>
+    <description>Recent content in Blue Team Labs Online Writeups on Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language><atom:link href="https://1d8.github.io/writeups/blueteamlabsonline/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Compromised Wordpress Log Investigation</title>
+      <link>https://1d8.github.io/writeups/blueteamlabsonline/wordpressloganalysis/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://1d8.github.io/writeups/blueteamlabsonline/wordpressloganalysis/</guid>
+      <description>Description: Analyzing the logs of a compromised Wordpress site Log Analysis Compromised Wordpress - https://blueteamlabs.online/home/challenge/9
+In this challenge, we&amp;rsquo;re given a log file and told that it belongs to a Wordpress site which was compromised. The way in which the site was compromised is unknown, but it&amp;rsquo;s suspected that an installed plugin was vulnerable to Remote Code Execution (RCE) and an attacker exploited this to gain access.
+The task questions are:</description>
+    </item>
+    
+    <item>
+      <title>Ransomware Memory Analysis With Volatility</title>
+      <link>https://1d8.github.io/writeups/blueteamlabsonline/ransomwarememoryanalysis/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://1d8.github.io/writeups/blueteamlabsonline/ransomwarememoryanalysis/</guid>
+      <description>Description: Performing memory analysis on a Windows machine infected with ransomware Blue Team Labs Online Memory Analysis Ransomware - https://blueteamlabs.online/home/challenge/1
+In this challenge, we&amp;rsquo;re given a memory dump and told that the computer the memory dump was captured from, is the victim of a ransomware attack.
+There&amp;rsquo;s 7 tasks in this challenge:
+ Run vol.py -f infected.vmem --profile=Win7SP1x86 psscan that will list all processes. What is the name of the suspicious process What is the parent process ID for the suspicious process?</description>
+    </item>
+    
+  </channel>
+</rss>

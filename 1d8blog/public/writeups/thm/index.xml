@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>TryHackMe Writeups on Blog</title>
+    <link>https://1d8.github.io/writeups/thm/</link>
+    <description>Recent content in TryHackMe Writeups on Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language><atom:link href="https://1d8.github.io/writeups/thm/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Committed Sensitive Data</title>
+      <link>https://1d8.github.io/writeups/thm/gitcommitted/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://1d8.github.io/writeups/thm/gitcommitted/</guid>
+      <description>Description: Investigating Git commits for sensitive data
+TryHackMe&amp;rsquo;s Committed - https://tryhackme.com/room/committed
+For this challenge, we&amp;rsquo;re given an Ubuntu machine and told that sensitive data, aka our flag, has been committed to a Github repository, but it is unknown where the exact file location that the data was committed to. Our task is to find this sensitive data using git!
+With git, every commit is logged and gets a commit ID which is a long hash-like string.</description>
+    </item>
+    
+    <item>
+      <title>Epoch Web App Code Execution</title>
+      <link>https://1d8.github.io/writeups/thm/epochrce/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://1d8.github.io/writeups/thm/epochrce/</guid>
+      <description>Description: Hacking an epoch time converter web application
+Epoch - https://tryhackme.com/room/epoch
+Navigating to the webserver, we find an input box where we can enter an Epoch value that&amp;rsquo;s converted to a UTC value:
+We know from the THM room page that there is some form of command injection involved in this room, so my first thought is to use a semicolon in order to terminate the first command being executed, then add on our own command.</description>
+    </item>
+    
+    <item>
+      <title>Exploiting Insecure Service Permissions</title>
+      <link>https://1d8.github.io/writeups/thm/insecureservicepermissions/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://1d8.github.io/writeups/thm/insecureservicepermissions/</guid>
+      <description>Description: In this post, I go over setting up a lab environment with a service that has insecure permissions, then walkthrough how to exploit it using PowerUp &amp;amp; manually
+Insecure Service Permissions When it comes to this vulnerability, we&amp;rsquo;re simply modifying the service so it points to an executable we want to run along with the parameters to run with it! The reason why this is possible is because excessive privileges have been granted to modify a service, such as allowing everybody to modify it or allowing lower privilege users to modify it.</description>
+    </item>
+    
+    <item>
+      <title>Mr. Phisher Macros</title>
+      <link>https://1d8.github.io/writeups/thm/mrphisher/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://1d8.github.io/writeups/thm/mrphisher/</guid>
+      <description>Description: Deobfuscating maldoc macros to find a flag
+TryHackMe&amp;rsquo;s Mr. Phisher - https://tryhackme.com/room/mrphisher
+This challenge involves deobfuscating macros in a Microsoft Office Document to discover our flag!
+We&amp;rsquo;re given an Ubuntu machine which has a document named MrPhisher.docm. Since it has the .docm extension, we can assume that it does indeed contain macros. I chose to download this file to my Remnux machine so that way I have access to the analysis tools that Remnux offers such as olevba which will help us extract the macros without having to open the document.</description>
+    </item>
+    
+    <item>
+      <title>Neighbor</title>
+      <link>https://1d8.github.io/writeups/thm/neighbor/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://1d8.github.io/writeups/thm/neighbor/</guid>
+      <description>Description: Hacking a web application by manipulating URL parameters Neighbor - https://tryhackme.com/room/neighbour
+We first perform an Nmap scan of the target IP address:
+nmap -sV -sC &amp;lt;ip address&amp;gt;
+ -sV - probe open ports and determine service/version info of any running services -sC - run default scripts on those discovered services  Starting Nmap 7.80 ( https://nmap.org ) at 2022-11-26 10:40 PST Nmap scan report for 10.10.228.136 Host is up (0.</description>
+    </item>
+    
+    <item>
+      <title>Quotient - Windows Unquoted Service Path Exploitation</title>
+      <link>https://1d8.github.io/writeups/thm/quotient/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://1d8.github.io/writeups/thm/quotient/</guid>
+      <description>Description: Exploiting a Windows unquoted service path vulnerability to escalate our privileges TryHackMe Quotient Without MsfVenom - https://tryhackme.com/room/quotient
+This room on TryHackMe involves exploiting an unquoted service path vulnerability to escalate our privileges and read the flag located on the Administrator&amp;rsquo;s desktop.
+Let&amp;rsquo;s quickly go over what a unquoted service path vulnerability is and how to exploit it.
+An unquoted service path vulnerability occurs when there&amp;rsquo;s a service whose service path contains spaces and it isn&amp;rsquo;t enclosed with quotation marks.</description>
+    </item>
+    
+    <item>
+      <title>REvil Memory Dump Analysis With Redline</title>
+      <link>https://1d8.github.io/writeups/thm/thmrevilcorp/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://1d8.github.io/writeups/thm/thmrevilcorp/</guid>
+      <description>Description: &amp;ldquo;Performing analysis on a memory dump file of a Windows machine infected with Revil ransomware using FireEye’s Redline memory analysis tool TryHackMe&amp;rsquo;s REvil Corp - https://tryhackme.com/room/revilcorp
+Q: What is the compromised employee&amp;rsquo;s full name?
+Q: What is the operating system of the compromised host?
+By searching in the System Information section of Analysis data, we can find the answer to these 2 questions:
+Q: What is the name of the malicious executable that the user opened?</description>
+    </item>
+    
+    <item>
+      <title>Sakura OSINT</title>
+      <link>https://1d8.github.io/writeups/thm/sakurathmosint/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://1d8.github.io/writeups/thm/sakurathmosint/</guid>
+      <description>Description: Using Open Source Intelligence (OSINT) techniques to solve a TryHackMe Sakura challenge Sakura Room - TryHackMe - https://tryhackme.com/room/sakura
+Our first task is to find the username of the attacker and we are given a .svg image file which tend to contain a trove of data that could be read just by viewing the source of the file!
+Line 20 of the source of the .svg file gives us the full filepath of the image, including the attacker&amp;rsquo;s username: SakuraSnowAngelAiko:</description>
+    </item>
+    
+    <item>
+      <title>Windows Memory Forensics</title>
+      <link>https://1d8.github.io/writeups/thm/thmmemoryforensics/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://1d8.github.io/writeups/thm/thmmemoryforensics/</guid>
+      <description>Description: &amp;ldquo;Performing memory forensics on Windows machine images using Volatility Memory Forensics - https://tryhackme.com/room/memoryforensics
+In this challenge, we&amp;rsquo;re given 3 memory dump files totaling 3.2 GB in size:
+ Snapshot6.vmem Snapshot14.vmem Snapshot19.vmem  I will be using remnux&amp;rsquo;s virtual machine to solve these tasks along with the volatility memory analysis tool!
+Task 2 In our second task, we&amp;rsquo;re given Snapshot6.vmem and asked to find John&amp;rsquo;s password.
+The first step from all these tasks that I took is identifying the correct memory profile to use with volatility which can be done via:</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>HackTheBox Writeups on Blog</title>
+    <link>https://1d8.github.io/writeups/htb/</link>
+    <description>Recent content in HackTheBox Writeups on Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language><atom:link href="https://1d8.github.io/writeups/htb/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Sau Writeup</title>
+      <link>https://1d8.github.io/writeups/htb/sau/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://1d8.github.io/writeups/htb/sau/</guid>
+      <description>Starting off with an nmap scan for the box: nmap -sV -sC 10.10.11.224:
+We see that there&amp;rsquo;s 3 ports opened:
+ 22 - SSH 80 - HTTP 55555 - Unknown  SSH is usually not a port to focus on when it comes to HTB machines, and port 80 is being filtered so we likely will not be able to access it. So let&amp;rsquo;s focus our efforts on this unknown service running on port 55555.</description>
+    </item>
+    
+  </channel>
+</rss>

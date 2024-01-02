@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cyberdefenders Writeups on Blog</title>
+    <link>https://1d8.github.io/writeups/cyberdefenders/</link>
+    <description>Recent content in Cyberdefenders Writeups on Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language><atom:link href="https://1d8.github.io/writeups/cyberdefenders/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Grab the phisher</title>
+      <link>https://1d8.github.io/writeups/cyberdefenders/grabthephisher/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://1d8.github.io/writeups/cyberdefenders/grabthephisher/</guid>
+      <description>Description: &amp;ldquo;Investigating a phishing page to learn more about the phisher GrabThePhisher - https://cyberdefenders.org/blueteam-ctf-challenges/95i
+After unzipping the file, we go into the pankewk/ directory and discover various directories which are typical of a web server. But there&amp;rsquo;s also a metamask/ directory which appears interesting!
+Within this directory, we have 2 files &amp;amp; 1 directory:
+ fonts/ index.html metamask.php  Opening up the metamask.php file:
+We see that it contains .php code that captures certain data, then sends it off to a Telegram server, and there&amp;rsquo;s also an interesting comment that&amp;rsquo;s signed with the alias j1j1b1s@m3r0</description>
+    </item>
+    
+    <item>
+      <title>Insider Disk Analysis With FTK</title>
+      <link>https://1d8.github.io/writeups/cyberdefenders/insider/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://1d8.github.io/writeups/cyberdefenders/insider/</guid>
+      <description>Description: Using FTK disk analysis tool to analyze a Linux disk image CyberDefenders Insider - https://cyberdefenders.org/blueteam-ctf-challenges/64
+This challenge centers around using FTKImager to analyze a Linux disk image.
+ What distribution of Linux is being used on this machine? What is the MD5 hash of the apache access.log? It is believed that a credential dumping tool was downloaded? What is the file name of the download? There was a super-secret file created.</description>
+    </item>
+    
+    <item>
+      <title>L&#39;espion OSINT</title>
+      <link>https://1d8.github.io/writeups/cyberdefenders/lespionosint/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://1d8.github.io/writeups/cyberdefenders/lespionosint/</guid>
+      <description>Description: Using Open Source Intelligence (OSINT) techniques to solve a CyberDefender&amp;rsquo;s challenge CyberDefenders L&amp;rsquo;espion - https://cyberdefenders.org/blueteam-ctf-challenges/73
+This challenge centers around OSINT.
+File -&amp;gt; Github.txt For task #1, we&amp;rsquo;re asked:
+What is the API key the insider added to his GitHub repositories?
+And the only thing inside the Github.txt file is a Github profile: https://github.com/EMarseille99
+Scrolling through the profile, there&amp;rsquo;s only one repository which isn&amp;rsquo;t a fork of another Github repository: https://github.</description>
+    </item>
+    
+    <item>
+      <title>Seized Linux Memory Analysis With Volatility</title>
+      <link>https://1d8.github.io/writeups/cyberdefenders/seizedlinuxmemanalysis/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://1d8.github.io/writeups/cyberdefenders/seizedlinuxmemanalysis/</guid>
+      <description>Description: Using Volatility to perform memory analysis on a memory dump of a CentOS Linux machine Seized - https://cyberdefenders.org/blueteam-ctf-challenges/92
+In this challenge, we&amp;rsquo;re given a zip file which contains dump.mem along with another zip file named Centos7.3.10.1062.zip. The CentOS zip file is the profile that is necessary in order to use volatility with the Linux memory dump.
+The challenge description states:
+&amp;ldquo;Using Volatility, utilize your memory analysis skills to Investigate the provided Linux memory snapshots and figure out attack details.</description>
+    </item>
+    
+  </channel>
+</rss>
