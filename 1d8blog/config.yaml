@@ -1,0 +1,61 @@
+baseURL: https://1d8.github.io/
+languageCode: en-us
+theme: cupper-hugo-theme
+params:
+  description: The blog of a curious cybersecurity collegiate
+  footer: Checkout my [Github!](https://github.com/1d8)
+  defaultDarkTheme: false
+  logoAlt: Logo No Loado
+  search: true
+  customCss:
+    - css/custom_01.css
+    - css/custom_02.css
+  customJs:
+    - js/custom_01.js
+    - js/custom_02.js
+
+menu:
+  nav:
+    - name: Cheatsheets
+      url: /cheatsheets/
+      weight: 1
+    - name: CVEs
+      url: /cves/
+      weight: 2
+    - name: Publications
+      url: /publications/
+      weight: 3
+    - name: Writeups/Walkthroughs
+      url: /writeups/
+      weight: 4
+
+markup:
+  defaultMarkdownHandler: goldmark
+  goldmark:
+    extensions:
+      definitionList: true
+      footnote: true
+      linkify: true
+      strikethrough: true
+      table: true
+      taskList: true
+      typographer: true
+    parser:
+      attribute: true
+      autoHeadingID: true
+    renderer:
+      hardWraps: false
+      unsafe: true
+      xHTML: false
+  highlight:
+    codeFences: false
+    hl_Lines: ""
+    lineNoStart: 1
+    lineNos: false
+    lineNumbersInTable: true
+    noClasses: true
+    style: monokai
+    tabWidth: 4
+  tableOfContents:
+    endLevel: 6
+    startLevel: 2

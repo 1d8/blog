@@ -1,0 +1,4 @@
+[submodule "1d8blog/public"]
+	path = 1d8blog/public
+	url = https://github.com/1d8/1d8.github.io.git
+	branch = main
